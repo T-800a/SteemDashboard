@@ -1,0 +1,91 @@
+/*!
+*	http://www.color-hex.com/color-palette/29026
+*
+*	page head:	#c7e9f0
+*	feed:		#badee5
+*	Comments:	#a2d6e1
+*	Alerts:		#89ccdb
+*	catX:		#6cc5d8
+*
+*	button:		#36626C
+*/
+
+
+.header {
+	padding: 20px 10px 10px 10px; 
+	margin: 0px 0px 10px 0px; 
+	background-color: #cce6ff;
+	text-align: left;
+	vertical-align: middle;
+}
+
+.bg-beer-1 {
+  background-color: #c7e9f0 !important;
+}
+
+.bg-beer-2 {
+  background-color: #badee5 !important;
+}
+
+.bg-beer-3 {
+  background-color: #a2d6e1 !important;
+}
+
+.bg-beer-4 {
+  background-color: #89ccdb !important;
+}
+
+.bg-beer-5 {
+  background-color: #6cc5d8 !important;
+}
+
+.btn-beer {
+	color: #fff;
+	background-color: #36626C;
+	border-color: #36626C;
+	margin-left: 0.5rem;
+}
+
+.btn-steem {
+	margin-left: 0.5rem;
+}
+
+.alert-steem {
+	padding: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+.card-steem {
+	margin-bottom: 0.5rem;
+}
+
+.card-title-steem {
+	margin: 0;
+	padding: 0;
+}
+
+.card-body-steem {
+	padding: 0.5rem;
+}
+
+.col-card-steem {
+	padding-left: 0px;
+	padding-right: 15px;
+}
+
+img {
+    max-width: 66%; 
+	height: auto;
+	align: center;
+}
+
+.userpic {
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    border-radius: 50%;
+    width:	2rem;
+    height: 2rem;
+	margin: 0rem 0rem 0rem 0rem; 
+}

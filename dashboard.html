@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	
+	<!-- Custom Fonts -->
+	<link rel="stylesheet" href="vendor/font-awesome/css/font-awesome.min.css" type="text/css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" type="text/css">
+	
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="css/steem.css">
+
+	<title>Hello, world!</title>
+</head>
+<body>
+    
+	<div class="container-fluid header bg-beer-1">
+		<h3><strong>T-800a's Fabulous Dashboard</strong></h3>
+	</div>
+	
+	<div class="container-fluid">
+		<div class="row">
+		
+	<!-- FEED -->
+
+			<div class="col">
+				<div class="card bg-beer-2 card-steem">
+					<div class="card-header card-body-steem">
+						<a href="#" target="_blank" class="btn btn-sm btn-beer float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapseFeedHead" aria-expanded="false" aria-controls="collapseFeedHead"><i class="fa fa-chevron-down"></i></a>
+						<h5><strong>Feed</strong></h5>
+					</div>
+					<div id="collapseFeedHead" class="collapse">
+						<div class="card-body card-body-steem">
+						</div>
+					</div>
+				</div>
+
+				<div id="output-feed">
+				
+	<!-- Templates for Feed -->
+					<div id="template-feed">			
+						<div class="card bg-light card-steem">
+							<div class="card-header card-body-steem">
+								<div class="row">
+									<div class="col-md-auto">
+										<div class="userpic" style="background-image: url(&quot;https://steemitimages.com/u/{{feed.author}}/avatar&quot;);"></div>
+									</div>
+									<div class="col col-card-steem">
+										<a href="#" target="_blank" class="btn btn-sm btn-secondary btn-steem float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapse{{feed.ID}}" aria-expanded="false" aria-controls="collapse{{feed.ID}}"><i class="fa fa-chevron-down"></i></a>
+										<a href="https://steemit.com/@{{feed.author}}/{{feed.permlink}}" target="_blank" class="btn btn-outline-secondary btn-sm float-right" role="button" aria-pressed="true">zum Post</a>
+										<a href="https://steemit.com/@{{feed.author}}/" target="_blank"><strong>@{{feed.author}}</strong></a><br>
+										<p class="card-title card-title-steem">{{feed.header}}</p>
+									</div>
+								</div>
+							</div>
+							<div class="card-body card-body-steem">
+								<small>{{feed.timestamp}} -  #{{feed.category}}</small>							
+							</div>
+							<div id="collapse{{feed.ID}}" class="collapse">
+								<hr>
+								<div class="card-body card-body-steem">
+									<!-- <img class="card-img-top" src="{{feed.image}}" alt=""> -->
+									<p class="card-text">{{feed.text}}</p>
+								</div>
+							</div>
+						</div>							
+					</div>
+
+				</div>
+				<button type="button" class="btn btn-light btn-sm btn-block" onclick="fnc_SteemLoadFeed( window.SteemAccount, window.SteemFeedLimit, window.SteemFeedLastPermlink, window.SteemFeedLastAuthor, true )">load more posts</button>
+			</div>
+			
+	<!-- COMMENTS -->
+
+			<div class="col">
+				<div class="card bg-beer-3 card-steem">
+					<div class="card-header card-body-steem">
+						<a href="#" target="_blank" class="btn btn-sm btn-beer float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapseCommentsHead" aria-expanded="false" aria-controls="collapseCommentsHead"><i class="fa fa-chevron-down"></i></a>
+						<h5><strong>Comments</strong></h5>
+					</div>
+					<div id="collapseCommentsHead" class="collapse">
+						<div class="card-body card-body-steem">
+						</div>
+					</div>
+				</div>
+	
+				<div id="output-comments">
+
+	<!-- Templates for Comments -->
+					<div id="template-comments">	
+						<div class="card bg-light card-steem">
+							<div class="card-header card-body-steem">
+								<div class="row">
+									<div class="col-md-auto">
+										<div class="userpic" style="background-image: url(&quot;https://steemitimages.com/u/{{comment.author}}/avatar&quot;);"></div>
+									</div>
+									<div class="col col-card-steem">
+										<a href="#" target="_blank" class="btn btn-sm btn-secondary btn-steem float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapseComment{{comment.ID}}" aria-expanded="false" aria-controls="collapseComment{{comment.ID}}"><i class="fa fa-chevron-down"></i></a>
+										<a href="https://steemit.com/@{{comment.author}}/{{comment.permlink}}" target="_blank" class="btn btn-outline-secondary btn-sm float-right" role="button" aria-pressed="true">zum Kommentar</a>
+										<a href="https://steemit.com/@{{comment.author}}/" target="_blank"><strong>@{{comment.author}}</strong></a><br>
+										<small>{{comment.timestamp}}</small>
+									</div>
+								</div>
+							</div>
+							<div id="collapseComment{{comment.ID}}" class="collapse">
+								<div class="card-body card-body-steem">
+									<p class="card-text">{{comment.text}}</p>
+								</div>
+							</div>
+						</div>		
+					</div>
+
+				</div>
+			</div>
+
+	<!-- ALERTS -->
+			
+			<div class="col">
+				<div class="card bg-beer-4 card-steem">
+					<div class="card-header card-body-steem">
+						<a href="#" target="_blank" class="btn btn-sm btn-beer float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapseAlertsHead" aria-expanded="false" aria-controls="collapseAlertsHead"><i class="fa fa-chevron-down"></i></a>
+						<h5><strong>Alerts</strong></h5>
+					</div>
+					<div id="collapseAlertsHead" class="collapse">
+						<div class="card-body card-body-steem">
+						</div>
+					</div>
+				</div>
+			
+				<div id="output-alerts">
+
+	<!-- Templates for Alerts -->
+					<div id="template-votes-alert">
+						<div class="alert {{vote.style}} alert-steem" role="alert">
+							{{if vote.voterSelf}}Ich habe{{else}}<a href="{{vote.voterURL}}" target="_blank" class="alert-link">@{{vote.voter}}</a> hat{{/if}} einen <a href="{{vote.permlink}}" target="_blank" class="alert-link">{{if vote.type}}Post{{else}}Kommentar{{/if}}</a> von {{if vote.authorSelf}}mir{{else}}<a href="{{vote.authorURL}}" target="_blank" class="alert-link">@{{vote.author}}</a>{{/if}} mit {{vote.weight}} % gevoted!<br>
+							<small>{{vote.timestamp}}</small>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+	<script src="https://cdn.steemjs.com/lib/latest/steem.min.js"></script>
+	<script src="js.markup/markup.min.js"></script>
+	<script src="js.markup/remarkable.js"></script>
+	<script src="js.steem/steem.js"></script>
+	<script src="js.steem/cat.beersaturday.js"></script>
+	
+</body>
+</html>
+
+
