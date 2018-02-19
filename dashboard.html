@@ -15,12 +15,12 @@
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="css/steem.css">
 
-	<title>Hello, world!</title>
+	<title>T-800a's Fabulous Steemit Dashboard!</title>
 </head>
 <body>
     
 	<div class="container-fluid header bg-beer-1">
-		<h3><strong>T-800a's Fabulous Dashboard</strong></h3>
+		<h3><strong>T-800a's Fabulous Steemit Dashboard!</strong></h3>
 	</div>
 	
 	<div class="container-fluid">
@@ -54,13 +54,11 @@
 										<a href="#" target="_blank" class="btn btn-sm btn-secondary btn-steem float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapse{{feed.ID}}" aria-expanded="false" aria-controls="collapse{{feed.ID}}"><i class="fa fa-chevron-down"></i></a>
 										<a href="https://steemit.com/@{{feed.author}}/{{feed.permlink}}" target="_blank" class="btn btn-outline-secondary btn-sm float-right" role="button" aria-pressed="true">zum Post</a>
 										<a href="https://steemit.com/@{{feed.author}}/" target="_blank"><strong>@{{feed.author}}</strong></a><br>
-										<p class="card-title card-title-steem">{{feed.header}}</p>
+										<small><strong>{{feed.header}}</strong><br>#{{feed.category}} - {{feed.timestamp}}</small>
 									</div>
 								</div>
 							</div>
-							<div class="card-body card-body-steem">
-								<small>{{feed.timestamp}} -  #{{feed.category}}</small>							
-							</div>
+
 							<div id="collapse{{feed.ID}}" class="collapse">
 								<hr>
 								<div class="card-body card-body-steem">
@@ -85,6 +83,9 @@
 					</div>
 					<div id="collapseCommentsHead" class="collapse">
 						<div class="card-body card-body-steem">
+						
+							<button type="button" class="btn btn-danger"  onclick="fnc_sortDiv( 'output-comments' )" >Re-Sort Comments</button>
+							
 						</div>
 					</div>
 				</div>
@@ -93,7 +94,7 @@
 
 	<!-- Templates for Comments -->
 					<div id="template-comments">	
-						<div class="card bg-light card-steem">
+						<div id="comment{{comment.ID}}" class="card bg-light card-steem">
 							<div class="card-header card-body-steem">
 								<div class="row">
 									<div class="col-md-auto">
@@ -103,7 +104,7 @@
 										<a href="#" target="_blank" class="btn btn-sm btn-secondary btn-steem float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapseComment{{comment.ID}}" aria-expanded="false" aria-controls="collapseComment{{comment.ID}}"><i class="fa fa-chevron-down"></i></a>
 										<a href="https://steemit.com/@{{comment.author}}/{{comment.permlink}}" target="_blank" class="btn btn-outline-secondary btn-sm float-right" role="button" aria-pressed="true">zum Kommentar</a>
 										<a href="https://steemit.com/@{{comment.author}}/" target="_blank"><strong>@{{comment.author}}</strong></a><br>
-										<small>{{comment.timestamp}}</small>
+										<small><strong>{{comment.title}}</strong><br>{{comment.timestamp}}</small>
 									</div>
 								</div>
 							</div>

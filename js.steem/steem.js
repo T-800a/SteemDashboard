@@ -147,6 +147,61 @@ function fnc_outputAlerts( alerts )
 	}
 }
 
+/*
+					var output = {
+						result:		result[i],
+						timestamp:	c_times,
+						datum:		c_datum
+					};
+*/
+
+function fnc_outputComments( array )
+{
+	array.sort(function(a,b){
+		return new Date(b.timestamp) - new Date(a.timestamp);
+	});
+
+	for ( var i = 0; i < array.length; i++ ) {
+		
+		fnc_buildComment( array[i].result, array[i].datum, i );
+	}
+}
+
+async function fnc_buildComment( result, timestamp, ID )
+{
+	var content = await steem.api.getContentAsync(result[1].op[1].author, result[1].op[1].permlink);
+
+	var cleanBody = md.render(result[1].op[1].body)
+	cleanBody = cleanBody.replace(/<(?:.|\n)*?>/gm, '');
+
+	var data = {
+		comment : {
+			ID:			ID,
+			author:		result[1].op[1].author,
+			permlink:	result[1].op[1].permlink,
+			title:		content.root_title,
+			text:		cleanBody,
+			timestamp:	timestamp
+		}
+	};
+
+	var htmlElement = Mark.up(template_comments, data);
+	
+	$("#output-comments").append( htmlElement );
+	fnc_sortDiv( 'output-comments' );
+}
+
+function fnc_sortDiv( element ){
+	var main = document.getElementById( element );
+	[].map.call( main.children, Object ).sort( function ( a, b ) {
+		return +a.id.match( /\d+/ ) - +b.id.match( /\d+/ );
+	}).forEach( function ( elem ) {
+		main.appendChild( elem );
+	});	
+}
+
+
+
 function fnc_SteemLoadFeed( querryAccount, querryLimit, querryPermlink, querryAuthor, loadMore  )
 {
 	if ( querryAccount == undefined ){		var querryAccount		= window.SteemAccount; }
@@ -242,7 +297,7 @@ function fnc_SteemAccountHistory( querryAccount, querryFrom, querryLimit )
 	if ( querryFrom == undefined ){			var querryFrom			= Date.parse('2015-01-01T00:00:00'); }
 	if ( querryLimit == undefined ){		var querryLimit			= 1000; }
 	
-	steem.api.getAccountHistory(querryAccount, querryFrom, querryLimit, function(err, result)
+	steem.api.getAccountHistory(querryAccount, querryFrom, querryLimit, async function(err, result)
 	{
 		var output_alerts = new Array();
 		var output_comments = new Array();
@@ -290,32 +345,18 @@ function fnc_SteemAccountHistory( querryAccount, querryFrom, querryLimit )
 		// fetch incomming COMMENTS
 		
 				if (result[i][1].op[0] == "comment" && count.comment < count.commentMax && result[i][1].op[1].parent_author != "" && result[i][1].op[1].author != account && !result[i][1].op[1].body.includes("@@")) {
-
-					var cleanBody = md.render(result[i][1].op[1].body)
-					cleanBody = cleanBody.replace(/<(?:.|\n)*?>/gm, '');
-				
-					var data = {
-						comment : {
-							ID:			count.comment,
-							author:		result[i][1].op[1].author,
-							permlink:	result[i][1].op[1].permlink,
-							text:		cleanBody,
-							permlink:	result[i][1].op[1].permlink,
-							timestamp:	c_datum
-						}
-					};
-
-					var htmlElement = Mark.up(template_comments, data);
 					
 					var output = {
-						time:	c_times,
-						html:	htmlElement
+						result:		result[i],
+						timestamp:	c_times,
+						datum:		c_datum
 					};
 					
-					output_comments.push(output);
+					output_comments.push( output );
 					
-					console.log(result[i]);
-					
+	//				fnc_outputComment( result[i], count.comment, c_datum );
+	//				console.log(result[i]);
+	
 					count.comment++;
 				}
 				
@@ -333,8 +374,8 @@ function fnc_SteemAccountHistory( querryAccount, querryFrom, querryLimit )
 		
 		
 	//	console.log(err, result);
-	
-		fnc_outputHTML( output_comments, '#output-comments' );
+		
+		fnc_outputComments( output_comments );
 		fnc_outputHTML( output_alerts, '#output-alerts' );
 		
 	//	fnc_outputAlerts( output_alerts );
