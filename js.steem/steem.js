@@ -27,21 +27,7 @@
         }
       ]
     }
-	
-So in your case you would need to break up your code to handle it in two chunks.
-
-function makeCall( callback ) {
-    var body = 'Test post';
-      FB.api('/me/feed', 'post', { message: body }, function (response) {
-        if (!response || response.error) {
-         var finalresponse = response.error;
-        } else {
-          finalresponse = 'Post ID: ' + response.id;
-        }
-        callback(finalresponse);
-      });
-}
-
+    
 
 var array1 = [5, 12, 8, 130, 44];
 
@@ -52,6 +38,34 @@ var found = array1.find(function(element) {
 console.log(found);
 // expected output: 12
 
+
+// -------------------------------------------------------------------------------------------------------------------
+// async test
+
+var query = {
+	tag: 't-800a',
+  limit: 10
+};
+
+function fnc_callAPI (query, callback ){
+  steem.api.getDiscussionsByBlog(query, function (err, result) {
+        if (err) {
+         var finalresult = err;
+        } else {
+          finalresult = result;
+        }
+        
+        callback(finalresult);
+  });
+}
+
+function processResponse( response ) {
+    console.log(response);
+}
+
+fnc_callAPI(query, processResponse);
+
+// -------------------------------------------------------------------------------------------------------------------
 */
 
 var md = new Remarkable();
