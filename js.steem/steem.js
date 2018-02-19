@@ -90,7 +90,7 @@ window.SteemFeedLimit		= 100;
 
 var count = {
 	id:				0,
-	votesMax:		50,
+	votesMax:		100,
 	votes:			0,
 	commentMax:		50,
 	comment:		0,

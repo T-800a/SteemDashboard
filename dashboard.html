@@ -138,8 +138,8 @@
 	<!-- Templates for Alerts -->
 					<div id="template-votes-alert">
 						<div class="alert {{vote.style}} alert-steem" role="alert">
-							{{if vote.voterSelf}}Ich habe{{else}}<a href="{{vote.voterURL}}" target="_blank" class="alert-link">@{{vote.voter}}</a> hat{{/if}} einen <a href="{{vote.permlink}}" target="_blank" class="alert-link">{{if vote.type}}Post{{else}}Kommentar{{/if}}</a> von {{if vote.authorSelf}}mir{{else}}<a href="{{vote.authorURL}}" target="_blank" class="alert-link">@{{vote.author}}</a>{{/if}} mit {{vote.weight}} % gevoted!<br>
-							<small>{{vote.timestamp}}</small>
+							<small>{{if vote.voterSelf}}Ich habe{{else}}<a href="{{vote.voterURL}}" target="_blank" class="alert-link">@{{vote.voter}}</a> hat{{/if}} einen <a href="{{vote.permlink}}" target="_blank" class="alert-link">{{if vote.type}}Post{{else}}Kommentar{{/if}}</a> von {{if vote.authorSelf}}mir{{else}}<a href="{{vote.authorURL}}" target="_blank" class="alert-link">@{{vote.author}}</a>{{/if}} mit {{vote.weight}} % gevoted!<br>
+							{{vote.timestamp}}</small>
 						</div>
 					</div>
 
