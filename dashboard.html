@@ -19,8 +19,28 @@
 </head>
 <body>
     
-	<div class="container-fluid header bg-beer-1">
-		<h3><strong>T-800a's Fabulous Steemit Dashboard!</strong></h3>
+	<div class="container-fluid header">
+		<div class="row row-header">
+			<div class="col col-header bg-beer-1 col-md-auto">
+				<h3 class="header-title"><strong>T-800a's Fabulous Steemit Dashboard!</strong></h3>
+			</div>
+			<div class="col col-header bg-beer-2"></div>
+			<div class="col col-header bg-beer-3"></div>
+			<div class="col col-header bg-beer-4 col-md-auto"></div>
+			<div class="col col-header bg-beer-5">
+				<div class="header-title">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon1">@</span>
+						</div>
+						<input id="#MainSteemUser" type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+						<div class="input-group-append">
+							<button class="btn btn-secondary" type="button" onclick="fnc_setSteemUser();">Select</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	
 	<div class="container-fluid">
@@ -43,8 +63,8 @@
 				<div id="output-feed">
 				
 	<!-- Templates for Feed -->
-					<div id="template-feed">			
-						<div class="card bg-light card-steem">
+					<div id="template-feed">
+						<div class="card {{if feed.vote}}bg-voted{{else}}bg-light{{/if}} card-steem">
 							<div class="card-header card-body-steem">
 								<div class="row">
 									<div class="col-md-auto">
@@ -137,7 +157,7 @@
 
 	<!-- Templates for Alerts -->
 					<div id="template-votes-alert">
-						<div class="alert {{vote.style}} alert-steem" role="alert">
+						<div id="alert{{vote.ID}}"  class="alert {{vote.style}} alert-steem" role="alert">
 							<small>{{if vote.voterSelf}}Ich habe{{else}}<a href="{{vote.voterURL}}" target="_blank" class="alert-link">@{{vote.voter}}</a> hat{{/if}} einen <a href="{{vote.permlink}}" target="_blank" class="alert-link">{{if vote.type}}Post{{else}}Kommentar{{/if}}</a> von {{if vote.authorSelf}}mir{{else}}<a href="{{vote.authorURL}}" target="_blank" class="alert-link">@{{vote.author}}</a>{{/if}} mit {{vote.weight}} % gevoted!<br>
 							{{vote.timestamp}}</small>
 						</div>

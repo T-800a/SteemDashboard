@@ -12,9 +12,24 @@
 
 
 .header {
-	padding: 20px 10px 10px 10px; 
+	padding: 0px 0px 0px 0px; 
 	margin: 0px 0px 10px 0px; 
 	background-color: #cce6ff;
+}
+
+.row-header{
+	padding: 0px; 
+	margin: 0px;
+}
+
+.col-header{
+	padding: 0px; 
+	margin: 0px;
+}
+
+.header-title {
+	padding: 0px 0px 0px 0px; 
+	margin: 10px 90px 10px 30px; 
 	text-align: left;
 	vertical-align: middle;
 }
@@ -38,6 +53,11 @@
 .bg-beer-5 {
   background-color: #6cc5d8 !important;
 }
+
+.bg-voted {
+  background-color: #e3f7f1 !important;
+}
+
 
 .btn-beer {
 	color: #fff;
