@@ -65,56 +65,36 @@ function processResponse( response ) {
 
 fnc_callAPI(query, processResponse);
 
+
+
+steem.api.getFollowers("t-800a", null, null, 1000, function(err, result) {
+	console.log(err, result);
+});
+
+steem.api.getContent('ablaze', 're-t-800a-whiskybock-heubacher-brauerei-20180216t224654769z', function(err, result) {
+	console.log(err, result);
+});
+	
+	
 // -------------------------------------------------------------------------------------------------------------------
 */
 
-var md = new Remarkable();
-
-md.set({
-    html: true,
-    breaks: true
-});
-
-// Outputs: <h1>Remarkable rulezz!</h1>
-console.log(md.render('# Remarkable rulezz!'));
-
-var account = "t-800a";
-
-window.SteemAccount			= account;
-window.SteemFeedLimit		= 100;
-// window.SteemFeedLastPermlink
-// window.SteemFeedLastAuthor
 
 
-
-window.count = {
-	id:				0,
-	alertsMax:		100,
-	alerts:			0,
-	commentMax:		50,
-	comment:		0,
-	feedMax:		15,
-	feed:			0
-};
-
-
-var template_feed = document.getElementById("template-feed").innerHTML; 
-document.getElementById("output-feed").innerHTML = '';
-
-var template_comments = document.getElementById("template-comments").innerHTML; 
-document.getElementById("output-comments").innerHTML = '';
-
-var template_alerts_votes = document.getElementById("template-votes-alert").innerHTML; 
-document.getElementById("output-alerts").innerHTML = '';
-
+// -------------------------------------------------------------------------------------------------------------------
+//
+//				DEFINE FUNCTIONS
+//
+// -------------------------------------------------------------------------------------------------------------------
 
 async function fnc_setSteemUser(){
 	
 	var user = document.getElementById('#MainSteemUser').value;
 	
 	window.SteemAccount = user;
-	document.cookie = 'DashboardSteemUser' + user; 
-
+	var settings = { "user": window.SteemAccount };	
+	createCookie("SteamDashboardSettings", JSON.stringify(settings));
+	
 	window.count = {
 		id:				0,
 		alertsMax:		100,
@@ -357,8 +337,8 @@ function fnc_SteemAccountHistory( querryAccount, querryFrom, querryLimit )
 		var output_alerts = new Array();
 		var output_comments = new Array();
 		
-		console.log(querryAccount);
-		console.log(result);
+	//	console.log(querryAccount);
+	//	console.log(result);
 
 		if(!err && result != undefined && result.length > 0){
 
@@ -416,18 +396,109 @@ function fnc_SteemAccountHistory( querryAccount, querryFrom, querryLimit )
 	});
 }
 
+// -------------------------------------------------------------------------------------------------------------------
+//
+//				COOKIES
+
+function createCookie(name, value, days) {
+    var expires;
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    }
+    else {
+        expires = "";
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) {
+                c_end = document.cookie.length;
+            }
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+}
+
+
+
+
+
+// -------------------------------------------------------------------------------------------------------------------
+//
+//				START DOING STUFF
+//
+// -------------------------------------------------------------------------------------------------------------------
+
+
+// init markup
+var md = new Remarkable();
+md.set({ html: true, breaks: true });
+console.log(md.render('# Remarkable rulezz!'));
+
+
+// attemp loading cookie
+var cookie = getCookie( "SteamDashboardSettings" );
+console.log("# cookie: " + cookie);
+
+if ( cookie == "" ){
+	
+	var user = "t-800a";
+	
+	console.log("##### USER #####");
+	console.log("# -> no cookie");
+	console.log("# " + user);
+	
+	document.getElementById('#MainSteemUser').value = user;
+	window.SteemAccount = user;
+
+}else{
+	
+	var settings = JSON.parse(cookie);
+	console.log("##### USER #####");
+	console.log("# -> from cookie");
+	console.log("# user: " + settings.user);
+
+	document.getElementById('#MainSteemUser').value = settings.user;
+	window.SteemAccount = settings.user;
+
+}
+
+window.SteemFeedLimit		= 100;	
+// window.SteemFeedLastPermlink
+// window.SteemFeedLastAuthor
+
+window.count = {
+	id:				0,
+	alertsMax:		100,
+	alerts:			0,
+	commentMax:		50,
+	comment:		0,
+	feedMax:		15,
+	feed:			0
+};
+
+
+var template_feed = document.getElementById("template-feed").innerHTML; 
+document.getElementById("output-feed").innerHTML = '';
+
+var template_comments = document.getElementById("template-comments").innerHTML; 
+document.getElementById("output-comments").innerHTML = '';
+
+var template_alerts_votes = document.getElementById("template-votes-alert").innerHTML; 
+document.getElementById("output-alerts").innerHTML = '';
 
 fnc_SteemLoadFeed();
 fnc_SteemAccountHistory();
 
 console.log(window.count);
 
-/*
-	steem.api.getFollowers("t-800a", null, null, 1000, function(err, result) {
-		console.log(err, result);
-	});
 
-	steem.api.getContent('ablaze', 're-t-800a-whiskybock-heubacher-brauerei-20180216t224654769z', function(err, result) {
-		console.log(err, result);
-	});
-*/
