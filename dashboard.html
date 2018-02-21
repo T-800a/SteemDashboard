@@ -54,8 +54,13 @@
 						<a href="#" target="_blank" class="btn btn-sm btn-beer float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapseFeedHead" aria-expanded="false" aria-controls="collapseFeedHead"><i class="fa fa-chevron-down"></i></a>
 						<h5><strong>Feed</strong></h5>
 					</div>
-					<div id="collapseFeedHead" class="collapse">
+					<div id="collapseFeedHead" class="collapse bg-light">
 						<div class="card-body card-body-steem">
+							<div class="btn-group" role="group" aria-label="Basic example">
+								<button type="button" class="btn btn-outline-secondary" onClick="fnc_changeFeed();">#nofilter</button>
+								<button type="button" class="btn btn-outline-secondary" onClick="fnc_changeFeed(['beer','craftbeer','beersaturday']);">#Beer</button>
+								<button type="button" class="btn btn-outline-secondary" onClick="fnc_changeFeed(['steepshot']);">#Steepshot</button>
+							</div>
 						</div>
 					</div>
 				</div>

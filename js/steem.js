@@ -92,7 +92,7 @@ async function fnc_setSteemUser(){
 	var user = document.getElementById('#MainSteemUser').value;
 	
 	window.SteemAccount = user;
-	var settings = { "user": window.SteemAccount };	
+	var settings = { "user": window.SteemAccount, "tags": window.SteemFeedTags };	
 	createCookie("SteamDashboardSettings", JSON.stringify(settings), 14 );
 	
 	window.count = {
@@ -113,6 +113,21 @@ async function fnc_setSteemUser(){
 	
 	fnc_SteemLoadFeed();
 	fnc_SteemAccountHistory();
+}
+
+async function fnc_changeFeed( tags ){
+	
+	if ( tags == undefined ){ tags = []; }
+	
+	window.SteemFeedTags			= tags;
+	window.SteemFeedLastAuthor		= '';
+	window.SteemFeedLastPermlink	= '';
+	window.count.feed				= 0;
+	
+	var settings = { "user": window.SteemAccount, "tags": window.SteemFeedTags };	
+	createCookie("SteamDashboardSettings", JSON.stringify(settings), 14 );
+		
+	fnc_SteemLoadFeed( window.SteemAccount, window.SteemFeedLimit, window.SteemFeedLastPermlink, window.SteemFeedLastAuthor, false, window.SteemFeedTags );
 }
 
 
@@ -210,10 +225,27 @@ function fnc_sortDiv( element ){
 	});	
 }
 
-function fnc_tagInArray ( obj, tag ){
-	return obj.find(function( element ) { 
+
+// if ( fnc_tagInArray( metaArray.tags, "beer" )){ skip = false; };
+function fnc_tagInArray ( array, tag ){	
+	return array.find(function( element ) {
 		return ( element == tag ) ? true : false; 
 	})
+}
+
+
+// fnc_whitelistTags([ "", "", "" ], metaArray.tags );
+function fnc_whitelistTags ( tags, array ){
+	
+	var skip = true;
+	if ( tags.length > 0 ) {
+		tags.forEach(function( tag ){
+			if ( fnc_tagInArray( array, tag )){ skip = false; };
+		});
+	} else {
+		skip = false;
+	}
+	return skip;
 }
 
 
@@ -235,14 +267,22 @@ function fnc_inArrayOfObj ( array, obj, tag ){
 	return test;
 }
 
-function fnc_SteemLoadFeed( querryAccount, querryLimit, querryPermlink, querryAuthor, loadMore  )
+
+
+function fnc_SteemLoadFeed( querryAccount, querryLimit, querryPermlink, querryAuthor, loadMore, filterTags  )
 {
 	if ( querryAccount == undefined ){		var querryAccount		= window.SteemAccount; }
 	if ( querryLimit == undefined ){		var querryLimit			= window.SteemFeedLimit; }
 	if ( querryPermlink == undefined ){		var querryPermlink		= ''; }
 	if ( querryAuthor == undefined ){		var querryAuthor		= ''; }	
 	if ( loadMore == undefined ){			var loadMore			= false; }	
-		
+	if ( filterTags == undefined ){			var filterTags			= window.SteemFeedTags; }	
+	
+	// clear feed
+	if(!loadMore){ document.getElementById("output-feed").innerHTML = ''; }
+	
+	
+	// call the steem api
 	steem.api.getDiscussionsByFeed( { tag: querryAccount, limit: querryLimit, start_permlink: querryPermlink, start_author: querryAuthor }, function (err, result) {
 
 		var output_feed = new Array(); 
@@ -256,16 +296,17 @@ function fnc_SteemLoadFeed( querryAccount, querryLimit, querryPermlink, querryAu
 			
 			for (var i = result.length - 1; i >= 0; i--) {
 				
-				var skip = true;
+	//			var skip = true;
 				var metaArray = JSON.parse(result[i].json_metadata);
 				
-				if ( fnc_tagInArray( metaArray.tags, "beer" )){ skip = false; };
-				if ( fnc_tagInArray( metaArray.tags, "craftbeer" )){ skip = false; };
-				if ( fnc_tagInArray( metaArray.tags, "beersaturday" )){ skip = false; };
+				var skip = fnc_whitelistTags( filterTags, metaArray.tags );
 				
-				if ( fnc_tagInArray( metaArray.tags, "quote" )){ skip = true; };
-				
+	//			if ( fnc_tagInArray( metaArray.tags, "beer" )){ skip = false; };
+	//			if ( fnc_tagInArray( metaArray.tags, "craftbeer" )){ skip = false; };
+	//			if ( fnc_tagInArray( metaArray.tags, "beersaturday" )){ skip = false; };			
+	//			if ( fnc_tagInArray( metaArray.tags, "quote" )){ skip = true; };
 
+	
 				if ( result[i].first_reblogged_by == undefined && !skip ) {
 		
 					var c_times = result[i].created;
@@ -317,7 +358,7 @@ function fnc_SteemLoadFeed( querryAccount, querryLimit, querryPermlink, querryAu
 	//	FILL IT UP BABY ... gosh thats ugly i guess
 	//	
 		if ( window.count.feed < window.count.feedMax ){
-			fnc_SteemLoadFeed( window.SteemAccount, window.SteemFeedLimit, window.SteemFeedLastPermlink, window.SteemFeedLastAuthor, true );
+			fnc_SteemLoadFeed( window.SteemAccount, window.SteemFeedLimit, window.SteemFeedLastPermlink, window.SteemFeedLastAuthor, true, window.SteemFeedTags );
 		}
 		
 		return true
@@ -444,21 +485,19 @@ var md = new Remarkable();
 md.set({ html: true, breaks: true });
 console.log(md.render('# Remarkable rulezz!'));
 
-
 // attemp loading cookie
 var cookie = getCookie( "SteamDashboardSettings" );
-console.log("# cookie: " + cookie);
 
 if ( cookie == "" ){
 	
-	var user = "t-800a";
-	
 	console.log("##### USER #####");
 	console.log("# -> no cookie");
-	console.log("# " + user);
 	
-	document.getElementById('#MainSteemUser').value = user;
-	window.SteemAccount = user;
+	window.SteemAccount		= "t-800a";
+	window.SteemFeedTags	= ["beer","craftbeer","beersaturday"];
+	
+	// set user in inputfield
+	document.getElementById('#MainSteemUser').value = window.SteemAccount;
 
 }else{
 	
@@ -467,9 +506,11 @@ if ( cookie == "" ){
 	console.log("# -> from cookie");
 	console.log("# user: " + settings.user);
 
-	document.getElementById('#MainSteemUser').value = settings.user;
-	window.SteemAccount = settings.user;
-
+	window.SteemAccount		= settings.user;
+	window.SteemFeedTags	= settings.tags;
+	
+	// set user in inputfield
+	document.getElementById('#MainSteemUser').value = window.SteemAccount;
 }
 
 window.SteemFeedLimit		= 100;	
