@@ -19,3 +19,20 @@ people.push(
     { 'name' : 'Daniel', 'age' : 4 }
 );
 $.cookie("people", JSON.stringify(people));
+
+
+// ----------------
+
+//Array
+var arr = ["one", "two", "three", "four"];
+//get JSON string from array.
+var jsonStrofArray = JSON.stringify(arr); // returns json string of "["one","two","three","four"]"
+// Recover array from JSON string
+var arrFromJSONString = JSON.parse(jsonStrofArray); // Returns ["one", "two", "three", "four"]
+
+//Objects
+var obj = {firstname:"hiral", lastname: "patel"};
+//get json string from object
+var jsonStrofObj = JSON.stringify(obj); // returns json string of "{"firstname":"hiral","lastname":"patel"}"
+// Recover object from JSON string
+var objFromJSONString = JSON.parse(jsonStrofObj); // Returns json object with keys of firstname and lastname along with values.
