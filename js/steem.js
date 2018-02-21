@@ -93,7 +93,7 @@ async function fnc_setSteemUser(){
 	
 	window.SteemAccount = user;
 	var settings = { "user": window.SteemAccount };	
-	createCookie("SteamDashboardSettings", JSON.stringify(settings));
+	createCookie("SteamDashboardSettings", JSON.stringify(settings), 14 );
 	
 	window.count = {
 		id:				0,
