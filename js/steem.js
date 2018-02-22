@@ -421,9 +421,14 @@ function fnc_SteemAccountHistory( querryAccount, querryFrom, querryLimit )
 		// -------------------------------------------------------------------------------------------------------------
 		//  
 		
+			if (result[i][1].op[0] != "comment" && result[i][1].op[0] != "vote"){
 				
-			//	console.log(err, '#ID ' + window.count.id + ' // ' + result[i][1].op[0] + ' // - Author: ' + result[i][1].op[1].author );
-			//	console.log(err, result[i][1]);
+				console.log(err, result[i][1]);
+			}
+		
+				
+	//			console.log(err, '#ID ' + window.count.id + ' // ' + result[i][1].op[0] + ' // - Author: ' + result[i][1].op[1].author );
+	//			console.log(err, result[i][1]);
 				window.count.id++;
 			}
 		}

@@ -13,7 +13,7 @@
 
 .header {
 	padding: 0px 0px 0px 0px; 
-	margin: 0px 0px 10px 0px; 
+	margin: 0px 0px 0px 0px; 
 	background-color: #cce6ff;
 }
 
@@ -25,6 +25,16 @@
 .col-header{
 	padding: 0px; 
 	margin: 0px;
+}
+
+.col-left{
+	padding: 10px; 
+	margin: 0px;
+}
+
+
+.col-content{
+	padding-top: 10px; 
 }
 
 .header-title {
