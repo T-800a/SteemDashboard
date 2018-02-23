@@ -110,7 +110,9 @@ async function fnc_setSteemUser(){
 	document.getElementById("output-feed").innerHTML = '';
 	document.getElementById("output-comments").innerHTML = '';
 	document.getElementById("output-alerts").innerHTML = '';
-	
+	document.getElementById("output-menu").innerHTML = '';
+
+	fnc_buildMenu();
 	fnc_SteemLoadFeed();
 	fnc_SteemAccountHistory();
 }
@@ -166,6 +168,31 @@ function fnc_outputDataArray( array, buildFunction )
 		buildFunction( array[i].result, array[i].datum, i );
 	}
 }
+
+
+async function fnc_buildMenu()
+{
+	steem.api.getAccounts( [ window.SteemAccount ], function( err, response ){
+		var secondsago = ( new Date - new Date( response[0].last_vote_time + "Z" )) / 1000;
+		var vpow = response[0].voting_power + ( 10000 * secondsago / 432000 );
+		vpow = Math.min( vpow / 100, 100 ).toFixed( 2 );
+
+		console.log( "VPOW: " + vpow );
+
+		var data = {
+			menu: {
+				user: window.SteemAccount,
+				vpow: vpow
+			}
+		};
+		
+		var htmlElement = Mark.up(template_menu, data);
+		
+		$("#output-menu").append( htmlElement );
+	
+	});
+}
+
 
 async function fnc_buildAlerts( result, timestamp, ID )
 {
@@ -423,7 +450,7 @@ function fnc_SteemAccountHistory( querryAccount, querryFrom, querryLimit )
 		
 			if (result[i][1].op[0] != "comment" && result[i][1].op[0] != "vote"){
 				
-				console.log(err, result[i][1]);
+	//			console.log(err, result[i][1]);
 			}
 		
 				
@@ -542,9 +569,18 @@ document.getElementById("output-comments").innerHTML = '';
 var template_alerts_votes = document.getElementById("template-votes-alert").innerHTML; 
 document.getElementById("output-alerts").innerHTML = '';
 
+var template_menu = document.getElementById("template-menu").innerHTML; 
+document.getElementById("output-menu").innerHTML = '';
+
+fnc_buildMenu();
 fnc_SteemLoadFeed();
 fnc_SteemAccountHistory();
 
 console.log(window.count);
+
+steem.api.getAccounts(["t-800a"], function(err, result) {
+  console.log(err, result);
+});
+
 
 

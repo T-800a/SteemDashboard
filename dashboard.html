@@ -45,15 +45,29 @@
 	
 	<div class="container-fluid">
 		<div class="row">
-		
+	
+	<!-- MENU BAR -->
+	
 			<div class="col col-md-auto col-left bg-beer-1">
-	<!--			<div class="bg-beer-5" style="width: 150px; height: 150px;"></div> -->
-				<div>
-					<div class="btn-group-vertical">
-						<a href="http://steem.rocks/t-800a" target="_blank" class="btn btn-info" role="button" aria-pressed="true">Steem.Rocks</a>
-						<a href="https://steembottracker.com/" target="_blank" class="btn btn-info" role="button" aria-pressed="true">SteemBotTracker</a>
-						<a href="https://smartsteem.com/" target="_blank" class="btn btn-info" role="button" aria-pressed="true">SmartSteem</a>
-						<a href="https://www.minnowbooster.net/" target="_blank" class="btn btn-info" role="button" aria-pressed="true">Minnowbooster</a>
+				<div id="output-menu">
+				
+	<!-- Templates for Menu -->
+					<div id="template-menu">
+			
+						<div class="bg-beer-5 menu-profile-pic" style='background-image: url("https://steemitimages.com/u/{{menu.user}}/avatar");'></div>
+						
+						<div class="progress" style="height: 20px;">
+							<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: {{menu.vpow}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{menu.vpow}}%</div>
+						</div>
+						
+						<div>
+							<div class="btn-group-vertical btn-steem-menu">
+								<a href="http://steem.rocks/{{menu.user}}" target="_blank" class="btn btn-info btn-steem-menu" role="button" aria-pressed="true">Steem.Rocks</a>
+								<a href="https://steembottracker.com/" target="_blank" class="btn btn-info btn-steem-menu" role="button" aria-pressed="true">SteemBotTracker</a>
+								<a href="https://smartsteem.com/" target="_blank" class="btn btn-info btn-steem-menu" role="button" aria-pressed="true">SmartSteem</a>
+								<a href="https://www.minnowbooster.net/" target="_blank" class="btn btn-info btn-steem-menu" role="button" aria-pressed="true">Minnowbooster</a>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
