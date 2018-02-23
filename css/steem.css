@@ -107,8 +107,13 @@
 }
 
 .col-card-steem {
-	padding-left: 0px;
+	padding-left: 15px;
 	padding-right: 15px;
+}
+
+.col-card-userpic {
+	padding-left: 15px;
+	padding-right: 0px;
 }
 
 img {
