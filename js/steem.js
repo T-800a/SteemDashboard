@@ -1,14 +1,14 @@
 /*
 
 				var template	=	'<div class="alert {{vote.style}} alert-votes" role="alert">' +
-										'{{if vote.voterSelf}}Ich habe{{else}}<a href="{{vote.voterURL}}" target="_blank" class="alert-link">@{{vote.voter}}</a> hat{{/if}} ' + 
-										'einen <a href="{{vote.authorURL}}" target="_blank" class="alert-link">{{vote.typ}}</a> von ' + 
+										'{{if vote.voterSelf}}Ich habe{{else}}<a href="{{vote.voterURL}}" target="_blank" class="alert-link">@{{vote.voter}}</a> hat{{/if}} ' +
+										'einen <a href="{{vote.authorURL}}" target="_blank" class="alert-link">{{vote.typ}}</a> von ' +
 										'{{if vote.authorSelf}}mir{{else}}<a href="{{vote.authorURL}}" target="_blank" class="alert-link">@{{vote.author}}</a>{{/if}} mit {{vote.weight}} % gevoted! <br>' +
 										'<small>{{vote.timestamp}}</small>' +
 									'</div>';
-									
-									
-									
+
+
+
     {
       "trx_id": "0000000000000000000000000000000000000000",
       "block": 19954617,
@@ -27,7 +27,7 @@
         }
       ]
     }
-    
+
 
 var array1 = [5, 12, 8, 130, 44];
 
@@ -54,7 +54,7 @@ function fnc_callAPI (query, callback ){
         } else {
           finalresult = result;
         }
-        
+
         callback(finalresult);
   });
 }
@@ -74,8 +74,8 @@ steem.api.getFollowers("t-800a", null, null, 1000, function(err, result) {
 steem.api.getContent('ablaze', 're-t-800a-whiskybock-heubacher-brauerei-20180216t224654769z', function(err, result) {
 	console.log(err, result);
 });
-	
-	
+
+
 // -------------------------------------------------------------------------------------------------------------------
 */
 
@@ -88,47 +88,66 @@ steem.api.getContent('ablaze', 're-t-800a-whiskybock-heubacher-brauerei-20180216
 // -------------------------------------------------------------------------------------------------------------------
 
 async function fnc_setSteemUser(){
-	
+
 	var user = document.getElementById('#MainSteemUser').value;
-	
+
 	window.SteemAccount = user;
-	var settings = { "user": window.SteemAccount, "tags": window.SteemFeedTags };	
+	var settings = { "user": window.SteemAccount, "tags": window.SteemFeedTags };
 	createCookie("SteamDashboardSettings", JSON.stringify(settings), 14 );
-	
+
 	window.count = {
 		id:				0,
 		alertsMax:		100,
 		alerts:			0,
 		commentMax:		50,
-		comment:		0,
-		feedMax:		15,
-		feed:			0
+		comment:			0,
+		feedMax:			15,
+		feed:				0,
+		blog:				0
 	};
 
-	
+
 	// clear all
 	document.getElementById("output-feed").innerHTML = '';
 	document.getElementById("output-comments").innerHTML = '';
 	document.getElementById("output-alerts").innerHTML = '';
 	document.getElementById("output-menu").innerHTML = '';
+	document.getElementById("output-blog").innerHTML = '';
 
 	fnc_buildMenu();
 	fnc_SteemLoadFeed();
 	fnc_SteemAccountHistory();
 }
 
+async function fnc_setSteemCustomFeed(){
+
+	var tags = document.getElementById('SteemCustomFeed').value;
+
+	if ( tags == undefined ){ tags = []; } else { tags = [ tags ]; }
+
+	window.SteemFeedTags				= tags;
+	window.SteemFeedLastAuthor		= '';
+	window.SteemFeedLastPermlink	= '';
+	window.count.feed					= 0;
+
+	var settings = { "user": window.SteemAccount, "tags": window.SteemFeedTags };
+	createCookie("SteamDashboardSettings", JSON.stringify(settings), 14 );
+
+	fnc_SteemLoadFeed( window.SteemAccount, window.SteemFeedLimit, window.SteemFeedLastPermlink, window.SteemFeedLastAuthor, false, window.SteemFeedTags );
+}
+
 async function fnc_changeFeed( tags ){
-	
+
 	if ( tags == undefined ){ tags = []; }
-	
+
 	window.SteemFeedTags			= tags;
 	window.SteemFeedLastAuthor		= '';
 	window.SteemFeedLastPermlink	= '';
 	window.count.feed				= 0;
-	
-	var settings = { "user": window.SteemAccount, "tags": window.SteemFeedTags };	
+
+	var settings = { "user": window.SteemAccount, "tags": window.SteemFeedTags };
 	createCookie("SteamDashboardSettings", JSON.stringify(settings), 14 );
-		
+
 	fnc_SteemLoadFeed( window.SteemAccount, window.SteemFeedLimit, window.SteemFeedLastPermlink, window.SteemFeedLastAuthor, false, window.SteemFeedTags );
 }
 
@@ -138,9 +157,9 @@ function fnc_output_feed( feed )
 	feed.sort(function(a,b){
 		return new Date(b.time) - new Date(a.time);
 	});
-		
+
 	for ( var i = 0; i < feed.length; i++ ) {
-		
+
 		$("#output-feed").append( feed[i].html );
 	}
 }
@@ -152,7 +171,7 @@ function fnc_outputHTML( HTMLarray, ID )
 	});
 
 	for ( var i = 0; i < HTMLarray.length; i++ ) {
-		
+
 		$( ID ).append( HTMLarray[i].html );
 	}
 }
@@ -164,7 +183,7 @@ function fnc_outputDataArray( array, buildFunction )
 	});
 
 	for ( var i = 0; i < array.length; i++ ) {
-		
+
 		buildFunction( array[i].result, array[i].datum, i );
 	}
 }
@@ -185,11 +204,11 @@ async function fnc_buildMenu()
 				vpow: vpow
 			}
 		};
-		
+
 		var htmlElement = Mark.up(template_menu, data);
-		
+
 		$("#output-menu").append( htmlElement );
-	
+
 	});
 }
 
@@ -214,7 +233,7 @@ async function fnc_buildAlerts( result, timestamp, ID )
 	};
 
 	var htmlElement = Mark.up(template_alerts_votes, data);
-	
+
 	$("#output-alerts").append( htmlElement );
 	fnc_sortDiv( 'output-alerts' );
 }
@@ -238,7 +257,7 @@ async function fnc_buildComment( result, timestamp, ID )
 	};
 
 	var htmlElement = Mark.up(template_comments, data);
-	
+
 	$("#output-comments").append( htmlElement );
 	fnc_sortDiv( 'output-comments' );
 }
@@ -249,21 +268,21 @@ function fnc_sortDiv( element ){
 		return +a.id.match( /\d+/ ) - +b.id.match( /\d+/ );
 	}).forEach( function ( elem ) {
 		main.appendChild( elem );
-	});	
+	});
 }
 
 
 // if ( fnc_tagInArray( metaArray.tags, "beer" )){ skip = false; };
-function fnc_tagInArray ( array, tag ){	
+function fnc_tagInArray ( array, tag ){
 	return array.find(function( element ) {
-		return ( element == tag ) ? true : false; 
+		return ( element == tag ) ? true : false;
 	})
 }
 
 
 // fnc_whitelistTags([ "", "", "" ], metaArray.tags );
 function fnc_whitelistTags ( tags, array ){
-	
+
 	var skip = true;
 	if ( tags.length > 0 ) {
 		tags.forEach(function( tag ){
@@ -301,48 +320,48 @@ function fnc_SteemLoadFeed( querryAccount, querryLimit, querryPermlink, querryAu
 	if ( querryAccount == undefined ){		var querryAccount		= window.SteemAccount; }
 	if ( querryLimit == undefined ){		var querryLimit			= window.SteemFeedLimit; }
 	if ( querryPermlink == undefined ){		var querryPermlink		= ''; }
-	if ( querryAuthor == undefined ){		var querryAuthor		= ''; }	
-	if ( loadMore == undefined ){			var loadMore			= false; }	
-	if ( filterTags == undefined ){			var filterTags			= window.SteemFeedTags; }	
-	
+	if ( querryAuthor == undefined ){		var querryAuthor		= ''; }
+	if ( loadMore == undefined ){			var loadMore			= false; }
+	if ( filterTags == undefined ){			var filterTags			= window.SteemFeedTags; }
+
 	// clear feed
 	if(!loadMore){ document.getElementById("output-feed").innerHTML = ''; }
-	
-	
+
+
 	// call the steem api
 	steem.api.getDiscussionsByFeed( { tag: querryAccount, limit: querryLimit, start_permlink: querryPermlink, start_author: querryAuthor }, function (err, result) {
 
-		var output_feed = new Array(); 
-		
+		var output_feed = new Array();
+
 		if( !err && result != undefined && result.length > 1 ){
-						
+
 			if(loadMore){ result.shift(); }
 
 			window.SteemFeedLastAuthor		= result[result.length - 1].author;
 			window.SteemFeedLastPermlink	= result[result.length - 1].permlink;
-			
+
 			for (var i = result.length - 1; i >= 0; i--) {
-				
+
 	//			var skip = true;
 				var metaArray = JSON.parse(result[i].json_metadata);
-				
+
 				var skip = fnc_whitelistTags( filterTags, metaArray.tags );
-				
+
 	//			if ( fnc_tagInArray( metaArray.tags, "beer" )){ skip = false; };
 	//			if ( fnc_tagInArray( metaArray.tags, "craftbeer" )){ skip = false; };
-	//			if ( fnc_tagInArray( metaArray.tags, "beersaturday" )){ skip = false; };			
+	//			if ( fnc_tagInArray( metaArray.tags, "beersaturday" )){ skip = false; };
 	//			if ( fnc_tagInArray( metaArray.tags, "quote" )){ skip = true; };
 
-	
+
 				if ( result[i].first_reblogged_by == undefined && !skip ) {
-		
+
 					var c_times = result[i].created;
 					var c_datum = new Date(c_times).toLocaleDateString("de-DE", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
 
 					var cleanBody = md.render(result[i].body)
 					cleanBody = cleanBody.replace(/<h[0-9][^>]+>/gi, '');
 					cleanBody = cleanBody.replace(/<[/]{0,1}[h][0-9]>/gi, '');
-					
+
 					var vote = ( fnc_inArrayOfObj( result[i].active_votes, 'voter', 't-800a' ));
 
 					var data = {
@@ -357,9 +376,9 @@ function fnc_SteemLoadFeed( querryAccount, querryLimit, querryPermlink, querryAu
 							timestamp:	c_datum
 						}
 					};
-					
+
 					var htmlElement = Mark.up(template_feed, data);
-					
+
 					var output = {
 						time:	c_times,
 						html:	htmlElement
@@ -367,7 +386,7 @@ function fnc_SteemLoadFeed( querryAccount, querryLimit, querryPermlink, querryAu
 
 	//				console.log( result[i] );
 	//				console.log( metaArray.tags );
-	
+
 					output_feed.push(output);
 					window.count.feed++;
 				}
@@ -378,18 +397,77 @@ function fnc_SteemLoadFeed( querryAccount, querryLimit, querryPermlink, querryAu
 	//	console.log( window.count.feed );
 	//	console.log( window.SteemFeedLastAuthor );
 	//	console.log( window.SteemFeedLastPermlink );
-		
-		fnc_output_feed( output_feed );		
-		
+
+		fnc_output_feed( output_feed );
+
 	//
 	//	FILL IT UP BABY ... gosh thats ugly i guess
-	//	
+	//
 		if ( window.count.feed < window.count.feedMax ){
 			fnc_SteemLoadFeed( window.SteemAccount, window.SteemFeedLimit, window.SteemFeedLastPermlink, window.SteemFeedLastAuthor, true, window.SteemFeedTags );
 		}
-		
+
 		return true
-		
+
+	});
+}
+
+
+function fnc_SteemLoadBlog( querryAccount )
+{
+	if ( querryAccount == undefined ){ var querryAccount = window.SteemAccount; }
+	var output_blog = new Array();
+
+/*
+	following: [String] -> 'fabien'
+	startFollower: [String] -> '' || 'fabien'
+	followType: [?] -> null
+	limit: [Number] -> '0', '100'
+*/
+
+	steem.api.getDiscussionsByBlog({tag: querryAccount, limit: 25}, function(err, result) {
+
+		if( !err && result != undefined && result.length > 1 ){
+
+			for ( var i = 0; i < result.length; i++ ) {
+
+				var c_times = result[i].created;
+				var c_datum = new Date(c_times).toLocaleDateString("de-DE", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
+
+				var cleanBody = md.render(result[i].body)
+				cleanBody = cleanBody.replace(/<h[0-9][^>]+>/gi, '');
+				cleanBody = cleanBody.replace(/<[/]{0,1}[h][0-9]>/gi, '');
+
+				var vote = ( fnc_inArrayOfObj( result[i].active_votes, 'voter', 't-800a' ));
+
+				var data = {
+					blog: {
+						ID:			window.count.blog,
+						author:		result[i].author,
+						permlink:	result[i].permlink,
+						header:		result[i].title,
+						category:	result[i].category,
+						text:			cleanBody,
+						vote:			vote,
+						timestamp:	c_datum
+					}
+				};
+
+				var htmlElement = Mark.up(template_blog, data);
+
+				var output = {
+					time:	c_times,
+					html:	htmlElement
+				};
+
+//				console.log( output );
+
+				output_blog.push(output);
+				window.count.blog++;
+			}
+
+			fnc_outputHTML( output_blog, "#output-blog" );
+		}
 	});
 }
 
@@ -399,25 +477,25 @@ function fnc_SteemAccountHistory( querryAccount, querryFrom, querryLimit )
 	if ( querryAccount == undefined ){		var querryAccount		= window.SteemAccount; }
 	if ( querryFrom == undefined ){			var querryFrom			= Date.parse('2015-01-01T00:00:00'); }
 	if ( querryLimit == undefined ){		var querryLimit			= 1000; }
-	
+
 	steem.api.getAccountHistory(querryAccount, querryFrom, querryLimit, async function(err, result)
 	{
 		var output_alerts = new Array();
 		var output_comments = new Array();
-		
+
 	//	console.log(querryAccount);
 	//	console.log(result);
 
 		if(!err && result != undefined && result.length > 0){
 
 			for (var i = result.length - 1; i >= 0; i--) {
-		
+
 				var c_times = result[i][1].timestamp;
 				var c_datum = new Date(c_times).toLocaleDateString("de-DE", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
 
 		// -------------------------------------------------------------------------------------------------------------
 		// fetch VOTES
-		
+
 				if (result[i][1].op[0] == "vote" && window.count.alerts < window.count.alertsMax && !( result[i][1].op[1].voter == querryAccount && result[i][1].op[1].author == querryAccount )) {
 
 					var output = {
@@ -432,28 +510,29 @@ function fnc_SteemAccountHistory( querryAccount, querryFrom, querryLimit )
 
 		// -------------------------------------------------------------------------------------------------------------
 		// fetch incomming COMMENTS
-		
+
 				if (result[i][1].op[0] == "comment" && window.count.comment < window.count.commentMax && result[i][1].op[1].parent_author != "" && result[i][1].op[1].author != querryAccount && !result[i][1].op[1].body.includes("@@")) {
-					
+
 					var output = {
 						result:		result[i],
 						timestamp:	c_times,
 						datum:		c_datum
 					};
 
-					output_comments.push( output );	
+					output_comments.push( output );
 					window.count.comment++;
 				}
 
 		// -------------------------------------------------------------------------------------------------------------
-		//  
-		
+		//
+
 			if (result[i][1].op[0] != "comment" && result[i][1].op[0] != "vote"){
-				
+
 	//			console.log(err, result[i][1]);
+
 			}
-		
-				
+
+
 	//			console.log(err, '#ID ' + window.count.id + ' // ' + result[i][1].op[0] + ' // - Author: ' + result[i][1].op[1].author );
 	//			console.log(err, result[i][1]);
 				window.count.id++;
@@ -461,7 +540,7 @@ function fnc_SteemAccountHistory( querryAccount, querryFrom, querryLimit )
 		}
 
 	//	console.log(err, result);
-	
+
 		fnc_outputDataArray( output_comments, fnc_buildComment )
 		fnc_outputDataArray( output_alerts, fnc_buildAlerts )
 
@@ -512,6 +591,7 @@ function getCookie(c_name) {
 // -------------------------------------------------------------------------------------------------------------------
 
 
+
 // init markup
 var md = new Remarkable();
 md.set({ html: true, breaks: true });
@@ -521,18 +601,18 @@ console.log(md.render('# Remarkable rulezz!'));
 var cookie = getCookie( "SteamDashboardSettings" );
 
 if ( cookie == "" ){
-	
+
 	console.log("##### USER #####");
 	console.log("# -> no cookie");
-	
+
 	window.SteemAccount		= "t-800a";
 	window.SteemFeedTags	= ["beer","craftbeer","beersaturday"];
-	
+
 	// set user in inputfield
 	document.getElementById('#MainSteemUser').value = window.SteemAccount;
 
 }else{
-	
+
 	var settings = JSON.parse(cookie);
 	console.log("##### USER #####");
 	console.log("# -> from cookie");
@@ -540,12 +620,12 @@ if ( cookie == "" ){
 
 	window.SteemAccount		= settings.user;
 	window.SteemFeedTags	= settings.tags;
-	
+
 	// set user in inputfield
 	document.getElementById('#MainSteemUser').value = window.SteemAccount;
 }
 
-window.SteemFeedLimit		= 100;	
+window.SteemFeedLimit		= 100;
 // window.SteemFeedLastPermlink
 // window.SteemFeedLastAuthor
 
@@ -554,33 +634,31 @@ window.count = {
 	alertsMax:		100,
 	alerts:			0,
 	commentMax:		50,
-	comment:		0,
-	feedMax:		15,
-	feed:			0
+	comment:			0,
+	feedMax:			15,
+	feed:				0,
+	blog:				0
 };
 
 
-var template_feed = document.getElementById("template-feed").innerHTML; 
+var template_feed = document.getElementById("template-feed").innerHTML;
 document.getElementById("output-feed").innerHTML = '';
 
-var template_comments = document.getElementById("template-comments").innerHTML; 
+var template_comments = document.getElementById("template-comments").innerHTML;
 document.getElementById("output-comments").innerHTML = '';
 
-var template_alerts_votes = document.getElementById("template-votes-alert").innerHTML; 
+var template_alerts_votes = document.getElementById("template-votes-alert").innerHTML;
 document.getElementById("output-alerts").innerHTML = '';
 
-var template_menu = document.getElementById("template-menu").innerHTML; 
+var template_menu = document.getElementById("template-menu").innerHTML;
 document.getElementById("output-menu").innerHTML = '';
+
+var template_blog = document.getElementById("template-blog").innerHTML;
+document.getElementById("output-blog").innerHTML = '';
 
 fnc_buildMenu();
 fnc_SteemLoadFeed();
 fnc_SteemAccountHistory();
+fnc_SteemLoadBlog();
 
 console.log(window.count);
-
-steem.api.getAccounts(["t-800a"], function(err, result) {
-  console.log(err, result);
-});
-
-
-

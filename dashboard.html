@@ -7,18 +7,18 @@
 
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	
+
 	<!-- Custom Fonts -->
 	<link rel="stylesheet" href="vendor/font-awesome/css/font-awesome.min.css" type="text/css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" type="text/css">
-	
+
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="css/steem.css">
 
 	<title>T-800a's Fabulous Steemit Dashboard!</title>
 </head>
 <body>
-    
+
 	<div class="container-fluid header">
 		<div class="row row-header">
 			<div class="col col-header bg-beer-1 col-md-auto">
@@ -42,26 +42,27 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="container-fluid">
 		<div class="row">
-	
+
 	<!-- MENU BAR -->
-	
+
 			<div class="col col-md-auto col-left bg-beer-1">
 				<div id="output-menu">
-				
+
 	<!-- Templates for Menu -->
 					<div id="template-menu">
-			
+
 						<div class="bg-beer-5 menu-profile-pic" style='background-image: url("https://steemitimages.com/u/{{menu.user}}/avatar");'></div>
-						
+
 						<div class="progress" style="height: 20px;">
 							<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: {{menu.vpow}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{menu.vpow}}%</div>
 						</div>
-						
+
 						<div>
 							<div class="btn-group-vertical btn-steem-menu">
+								<a href="https://steemit.com/@{{menu.user}}" target="_blank" class="btn btn-info btn-steem-menu-top" role="button" aria-pressed="true">Steemit<br>@{{menu.user}}</a>
 								<a href="http://steem.rocks/{{menu.user}}" target="_blank" class="btn btn-info btn-steem-menu" role="button" aria-pressed="true">Steem.Rocks</a>
 								<a href="https://steembottracker.com/" target="_blank" class="btn btn-info btn-steem-menu" role="button" aria-pressed="true">SteemBotTracker</a>
 								<a href="https://smartsteem.com/" target="_blank" class="btn btn-info btn-steem-menu" role="button" aria-pressed="true">SmartSteem</a>
@@ -71,59 +72,71 @@
 					</div>
 				</div>
 			</div>
-		
+
 	<!-- FEED -->
 
 			<div class="col col-content">
 				<div class="card bg-beer-2 card-steem">
 					<div class="card-header card-body-steem">
-						<a href="#" target="_blank" class="btn btn-sm btn-beer float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapseFeedHead" aria-expanded="false" aria-controls="collapseFeedHead"><i class="fa fa-chevron-down"></i></a>
+<!--						<a href="#" target="_blank" class="btn btn-sm btn-beer float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapseFeedHead" aria-expanded="false" aria-controls="collapseFeedHead"><i class="fa fa-chevron-down"></i></a> -->
 						<h5><strong>Feed</strong></h5>
-					</div>
-					<div id="collapseFeedHead" class="collapse bg-light">
-						<div class="card-body card-body-steem">
-							<div class="btn-group" role="group" aria-label="Basic example">
-								<button type="button" class="btn btn-outline-secondary" onClick="fnc_changeFeed();">#nofilter</button>
-								<button type="button" class="btn btn-outline-secondary" onClick="fnc_changeFeed(['beer','craftbeer','beersaturday']);">#Beer</button>
-								<button type="button" class="btn btn-outline-secondary" onClick="fnc_changeFeed(['steepshot']);">#Steepshot</button>
+
+						<div class="input-group input-group-sm">
+							<div class="input-group-prepend">
+								<button type="button" class="btn btn-sm btn-outline-secondary" onClick="fnc_changeFeed();">All</button>
+								<button type="button" class="btn btn-sm btn-outline-secondary" onClick="fnc_changeFeed(['beer','craftbeer','beersaturday']);">#Beer</button>
+								<button type="button" class="btn btn-sm btn-outline-secondary" onClick="fnc_changeFeed(['steepshot']);">#Steepshot</button>
+								<button type="button" class="btn btn-sm btn-outline-secondary" onClick="fnc_changeFeed(['dtube']);">#DTube</button>
+							</div>
+							<input id="SteemCustomFeed" type="text" class="form-control" placeholder="Feed Tag" aria-label="Feed Tag" aria-describedby="basic-addon1">
+							<div class="input-group-append">
+								<button class="btn btn-sm btn-outline-secondary" type="button" onclick="fnc_setSteemCustomFeed();">Select</button>
 							</div>
 						</div>
 					</div>
+
+<!--
+					<div id="collapseFeedHead" class="collapse bg-light">
+						<div class="card-body card-body-steem">
+
+						</div>
+					</div>
+-->
 				</div>
 
+
 				<div id="output-feed">
-				
+
 	<!-- Templates for Feed -->
 					<div id="template-feed">
-						<div class="card {{if feed.vote}}bg-voted{{else}}bg-light{{/if}} card-steem">
+						<div id="feedItem{{feed.ID}}" class="card {{if feed.vote}}bg-voted{{else}}bg-light{{/if}} card-steem">
 							<div class="card-header card-body-steem">
 								<div class="row">
 									<div class="col-md-auto col-card-userpic">
 										<div class="userpic" style="background-image: url(&quot;https://steemitimages.com/u/{{feed.author}}/avatar&quot;);"></div>
 									</div>
 									<div class="col col-card-steem">
-										<a href="#" target="_blank" class="btn btn-sm btn-secondary btn-steem float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapse{{feed.ID}}" aria-expanded="false" aria-controls="collapse{{feed.ID}}"><i class="fa fa-chevron-down"></i></a>
-										<a href="https://steemit.com/@{{feed.author}}/{{feed.permlink}}" target="_blank" class="btn btn-outline-secondary btn-sm float-right" role="button" aria-pressed="true">zum Post</a>
+										<a href="#feedItem{{feed.ID}}" class="btn btn-sm btn-secondary btn-steem float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapse{{feed.ID}}" aria-expanded="false" aria-controls="collapse{{feed.ID}}"><i class="fa fa-chevron-down"></i></a>
+										<a href="https://steemit.com/@{{feed.author}}/{{feed.permlink}}" target="_blank" class="btn btn-outline-secondary btn-sm float-right" role="button" aria-pressed="true"><i class="fa fa-external-link"></i></a>
 										<a href="https://steemit.com/@{{feed.author}}/" target="_blank"><strong>@{{feed.author}}</strong></a><br>
 										<small><strong>{{feed.header}}</strong><br>#{{feed.category}} - {{feed.timestamp}}</small>
 									</div>
 								</div>
 							</div>
 
-							<div id="collapse{{feed.ID}}" class="collapse">
-								<hr>
+							<div id="collapse{{feed.ID}}" class="collapse" data-parent="#output-feed">
 								<div class="card-body card-body-steem">
 									<!-- <img class="card-img-top" src="{{feed.image}}" alt=""> -->
 									<p class="card-text">{{feed.text}}</p>
 								</div>
 							</div>
-						</div>							
+						</div>
 					</div>
 
 				</div>
 				<button type="button" class="btn btn-light btn-sm btn-block" onclick="fnc_SteemLoadFeed( window.SteemAccount, window.SteemFeedLimit, window.SteemFeedLastPermlink, window.SteemFeedLastAuthor, true )">load more posts</button>
 			</div>
-			
+
 	<!-- COMMENTS -->
 
 			<div class="col col-content">
@@ -134,17 +147,17 @@
 					</div>
 					<div id="collapseCommentsHead" class="collapse">
 						<div class="card-body card-body-steem">
-						
+
 							<button type="button" class="btn btn-danger"  onclick="fnc_sortDiv( 'output-comments' )" >Re-Sort Comments</button>
-							
+
 						</div>
 					</div>
 				</div>
-	
+
 				<div id="output-comments">
 
 	<!-- Templates for Comments -->
-					<div id="template-comments">	
+					<div id="template-comments">
 						<div id="comment{{comment.ID}}" class="card bg-light card-steem">
 							<div class="card-header card-body-steem">
 								<div class="row">
@@ -153,25 +166,25 @@
 									</div>
 									<div class="col col-card-steem">
 										<a href="#" target="_blank" class="btn btn-sm btn-secondary btn-steem float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapseComment{{comment.ID}}" aria-expanded="false" aria-controls="collapseComment{{comment.ID}}"><i class="fa fa-chevron-down"></i></a>
-										<a href="https://steemit.com/@{{comment.author}}/{{comment.permlink}}" target="_blank" class="btn btn-outline-secondary btn-sm float-right" role="button" aria-pressed="true">zum Kommentar</a>
+										<a href="https://steemit.com/@{{comment.author}}/{{comment.permlink}}" target="_blank" class="btn btn-outline-secondary btn-sm float-right" role="button" aria-pressed="true"><i class="fa fa-external-link"></i></a>
 										<a href="https://steemit.com/@{{comment.author}}/" target="_blank"><strong>@{{comment.author}}</strong></a><br>
 										<small><strong>{{comment.title}}</strong><br>{{comment.timestamp}}</small>
 									</div>
 								</div>
 							</div>
-							<div id="collapseComment{{comment.ID}}" class="collapse">
+							<div id="collapseComment{{comment.ID}}" class="collapse" data-parent="#output-comments">
 								<div class="card-body card-body-steem">
 									<p class="card-text">{{comment.text}}</p>
 								</div>
 							</div>
-						</div>		
+						</div>
 					</div>
 
 				</div>
 			</div>
 
 	<!-- ALERTS -->
-			
+
 			<div class="col col-content">
 				<div class="card bg-beer-4 card-steem">
 					<div class="card-header card-body-steem">
@@ -183,7 +196,7 @@
 						</div>
 					</div>
 				</div>
-			
+
 				<div id="output-alerts">
 
 	<!-- Templates for Alerts -->
@@ -196,10 +209,53 @@
 
 				</div>
 			</div>
+
+
+	<!-- BLOG -->
+
+					<div class="col col-content">
+						<div class="card bg-beer-5 card-steem">
+							<div class="card-header card-body-steem">
+								<a href="#" target="_blank" class="btn btn-sm btn-beer float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapseBlogHead" aria-expanded="false" aria-controls="collapseFeedHead"><i class="fa fa-chevron-down"></i></a>
+								<h5><strong>Blog</strong></h5>
+							</div>
+							<div id="collapseBlogHead" class="collapse bg-light">
+								<div class="card-body card-body-steem">
+
+								</div>
+							</div>
+						</div>
+
+						<div id="output-blog">
+
+			<!-- Templates for Feed -->
+							<div id="template-blog">
+								<div id="blogItem{{blog.ID}}" class="bg-light card-steem">
+									<div class="card-header card-body-steem">
+										<a href="#blogItem{{blog.ID}}" class="btn btn-sm btn-secondary btn-steem float-right" role="button" aria-pressed="true" data-toggle="collapse" data-target="#collapseblog{{blog.ID}}" aria-expanded="false" aria-controls="collapseblog{{blog.ID}}"><i class="fa fa-chevron-down"></i></a>
+										<a href="https://steemit.com/@{{blog.author}}/{{blog.permlink}}" target="_blank" class="btn btn-outline-secondary btn-sm float-right" role="button" aria-pressed="true"><i class="fa fa-external-link"></i></a>
+										<small><strong>{{blog.header}}</strong><br>#{{blog.category}} - {{blog.timestamp}}</small>
+									</div>
+
+									<div id="collapseblog{{blog.ID}}" class="collapse" data-parent="#output-blog">
+										<div class="card-body card-body-steem">
+											<!-- <img class="card-img-top" src="{{feed.image}}" alt=""> -->
+											<p class="card-text">{{blog.text}}</p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+						</div>
+					</div>
+
+
+<!-- container ende -->
 		</div>
 	</div>
-	
-	
+
+
 
 	<!-- Optional JavaScript -->
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -209,10 +265,8 @@
 	<script src="vendor/bootstrap/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	<script src="vendor/markup/markup.min.js"></script>
 	<script src="vendor/markup/remarkable.js"></script>
-	
+
 	<script src="js/steem.js"></script>
-	
+
 </body>
 </html>
-
-
